@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rick and Morty - Episodios</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #202329;
+            color: white;
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #97ce4c;
+        }
+
+        #episodios {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: #3c3e44;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .card h2 {
+            color: #97ce4c;
+        }
+
+        .card p {
+            color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Rick and Morty - Episodios</h1>
+
+    <div id="episodios"></div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
