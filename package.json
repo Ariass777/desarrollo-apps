@@ -1,0 +1,24 @@
+{
+  "name": "desarrollo-de-apps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ariass777/desarrollo-apps.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Ariass777/desarrollo-apps/issues"
+  },
+  "homepage": "https://github.com/Ariass777/desarrollo-apps#readme"
+}
