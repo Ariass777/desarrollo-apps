@@ -1,27 +1,46 @@
-#container {
-  text-align: center;
+.controls { display: flex; gap: 8px; margin-bottom: 10px; }
 
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+.search-box {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.65);
+  border: 2px solid rgba(16, 48, 31, 0.45);
+
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 40px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: 600 1rem monospace;
+    color: #10301f;
+  }
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.count { margin: 0 0 10px; font: 700 0.75rem monospace; letter-spacing: 1px; text-transform: uppercase; opacity: 0.75; }
+
+.dex-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+
+.state { display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 24px 12px; text-align: center; }
+
+.advanced-panel { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.panel-label { margin: 4px 0 0; font-weight: 700; }
+.chip-group { display: flex; flex-wrap: wrap; gap: 4px; }
+
+.filter-chip {
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  opacity: 0.4;
+  &.selected { opacity: 1; box-shadow: 0 0 0 2px #10301f; }
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+.range-row { display: flex; gap: 8px; ion-item { flex: 1; } }
 
-  color: #8c8c8c;
-
-  margin: 0;
-}
-
-#container a {
-  text-decoration: none;
-}
+ion-item { --background: rgba(255, 255, 255, 0.6); --color: #10301f; border-radius: 10px; }

@@ -1,2 +1,30 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+// Paleta Pokédex: rojo carcasa, azul lente, amarillo LED.
+:root {
+  --ion-color-danger: #d32f2f;
+  --ion-color-danger-rgb: 211, 47, 47;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #ba2929;
+  --ion-color-danger-tint: #d74343;
+
+  --ion-color-secondary: #1565c0;
+  --ion-color-secondary-rgb: 21, 101, 192;
+  --ion-color-secondary-contrast: #ffffff;
+  --ion-color-secondary-contrast-rgb: 255, 255, 255;
+  --ion-color-secondary-shade: #1259a9;
+  --ion-color-secondary-tint: #2c74c6;
+
+  --ion-color-tertiary: #f9a825;
+  --ion-color-tertiary-rgb: 249, 168, 37;
+  --ion-color-tertiary-contrast: #1a1a1a;
+  --ion-color-tertiary-contrast-rgb: 26, 26, 26;
+  --ion-color-tertiary-shade: #db9421;
+  --ion-color-tertiary-tint: #fab13b;
+
+  --ion-font-family: 'Trebuchet MS', 'Segoe UI', Roboto, system-ui, sans-serif;
+
+  --dex-red: #d32f2f;
+  --dex-red-dark: #8e0000;
+  --dex-lcd: #c4e6cd;
+  --dex-lcd-ink: #10301f;
+}

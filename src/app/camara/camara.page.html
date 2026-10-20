@@ -1,0 +1,158 @@
+<ion-header class="ion-no-border">
+  <app-dex-top title="Pokédex" subtitle="Cámara AR"></app-dex-top>
+</ion-header>
+
+<ion-content class="dex-body cam-body" [scrollY]="false">
+  <section class="dex-screen cam-screen">
+    <div class="lcd cam-lcd">
+      <video #video class="cam-video" [class.mirror]="facing() === 'user'" playsinline muted></video>
+      <div class="ar-stage" #stage></div>
+
+      <!-- Estado: cámara apagada / cargando / error -->
+      @if (state() !== 'on') {
+        <div class="cam-overlay">
+          @if (state() === 'starting') {
+            <ion-spinner name="crescent" color="light"></ion-spinner>
+            <p>Encendiendo cámara...</p>
+          } @else {
+            <ion-icon name="camera" class="cam-icon"></ion-icon>
+            <p>{{ state() === 'error' ? errorMsg() : 'Cámara apagada' }}</p>
+            <button type="button" class="dex-btn wide" (click)="startCamera()">
+              <ion-icon name="power"></ion-icon> Encender cámara
+            </button>
+          }
+        </div>
+      }
+
+      <!-- Barra superior: buscador + controles -->
+      <div class="hud-top">
+        <label class="hud-search">
+          <ion-icon name="search"></ion-icon>
+          <input type="search" [value]="query()" (input)="onSearch($event)" placeholder="Buscar Pokémon" aria-label="Buscar Pokémon" />
+        </label>
+        <button type="button" class="hud-btn" aria-label="Cambiar cámara" (click)="switchCamera()">
+          <ion-icon name="camera-reverse"></ion-icon>
+        </button>
+        <button type="button" class="hud-btn" [class.off]="state() !== 'on'" aria-label="Encender o apagar cámara" (click)="toggleCamera()">
+          <ion-icon name="power"></ion-icon>
+        </button>
+      </div>
+
+      @if (matches().length > 0) {
+        <ul class="hud-results">
+          @for (m of matches(); track m.id) {
+            <li (click)="pick(m)">
+              <img [src]="m.image || 'assets/placeholder.svg'" [alt]="m.name" />
+              <span>#{{ m.id | number: '3.0-0' }} {{ m.name }}</span>
+            </li>
+          }
+        </ul>
+      }
+
+      <!-- Recuadro de escaneo: lo que quede dentro es lo que analiza el reconocimiento -->
+      @if (state() === 'on') {
+        <div class="reticle" #reticle [class.scanning]="scanning()" [class.hit]="detect()?.kind === 'hit'">
+          <i></i><i></i><i></i><i></i>
+        </div>
+        @if (modelStatus() === 'loading') {
+          <div class="detect scanning">
+            <ion-spinner name="dots" color="light"></ion-spinner>
+            <span>Descargando modelo de reconocimiento {{ modelProgress() }}% · solo la primera vez</span>
+          </div>
+        } @else if (detect(); as d) {
+          <div class="detect" [class]="d.kind">
+            <span>{{ d.text }}</span>
+            @for (o of d.options; track o.id) {
+              <button type="button" class="opt" (click)="chooseOption(o.id)">{{ o.name }} {{ o.pct }}%</button>
+            }
+          </div>
+        } @else {
+          <div class="detect hint"><span>Apunta al Pokémon dentro del recuadro y toca Reconocer</span></div>
+        }
+      }
+
+      <!-- Navegación entre Pokémon -->
+      <button type="button" class="hud-nav left" aria-label="Pokémon anterior" (click)="prev()">
+        <ion-icon name="chevron-back"></ion-icon>
+      </button>
+      <button type="button" class="hud-nav right" aria-label="Pokémon siguiente" (click)="next()">
+        <ion-icon name="chevron-forward"></ion-icon>
+      </button>
+
+      <!-- Ficha del Pokémon -->
+      @if (pokemon(); as p) {
+        <div class="info" [class.collapsed]="!panelOpen()">
+          <button type="button" class="handle" aria-label="Mostrar u ocultar información" (click)="togglePanel()"><span></span></button>
+
+          <header class="info-head">
+            <img class="thumb" [src]="p.image || 'assets/placeholder.svg'" [alt]="p.name" />
+            <div class="who">
+              <small>Nº {{ p.id | number: '3.0-0' }}</small>
+              <h2>{{ p.name }}</h2>
+              <div class="types">
+                @for (t of p.types; track t) {
+                  <span class="type-badge" [class]="t.toLowerCase()">{{ t | typeEs }}</span>
+                }
+              </div>
+            </div>
+            <div class="scan-btns">
+              <button type="button" class="dex-btn scan" aria-label="Reconocer Pokémon" [disabled]="state() !== 'on' || scanning()" (click)="scanOnce()">
+                @if (scanning()) { <ion-spinner name="crescent"></ion-spinner> } @else { <ion-icon name="scan"></ion-icon> }
+              </button>
+              <button type="button" class="dex-btn" [class.active]="autoScan()" aria-label="Reconocimiento automático" [disabled]="state() !== 'on'" (click)="toggleAutoScan()">
+                <ion-icon name="sync"></ion-icon> Auto
+              </button>
+            </div>
+          </header>
+
+          @if (panelOpen()) {
+            <p class="desc">{{ p.description || 'Sin descripción disponible.' }}</p>
+
+            <div class="facts">
+              <div class="fact">
+                <span class="k">Peso</span>
+                <span class="v">{{ p.weight }} kg</span>
+              </div>
+              <div class="fact grow">
+                <span class="k">Habilidades</span>
+                <span class="v chips">
+                  @for (a of p.abilities || []; track a) {
+                    <i class="chip">{{ a | pretty }}</i>
+                  } @empty {
+                    <i class="chip">—</i>
+                  }
+                </span>
+              </div>
+            </div>
+
+            <div class="fact">
+              <span class="k">Ataques</span>
+              <span class="v chips">
+                @for (m of (p.attacks || []).slice(0, 4); track m) {
+                  <i class="chip">{{ m | pretty }}</i>
+                } @empty {
+                  <i class="chip">—</i>
+                }
+              </span>
+            </div>
+
+            <div class="tools">
+              <button type="button" class="act" [class.on]="isFav()" aria-label="Favorito" (click)="toggleFavorite()">
+                <ion-icon [name]="isFav() ? 'heart' : 'heart-outline'"></ion-icon>
+              </button>
+              <button type="button" class="act" [class.on]="speaking()" aria-label="Escuchar" (click)="speak()">
+                <ion-icon [name]="speaking() ? 'stop-circle' : 'volume-high'"></ion-icon>
+              </button>
+              <button type="button" class="dex-btn" (click)="random()"><ion-icon name="dice"></ion-icon> Aleatorio</button>
+              <button type="button" class="dex-btn" [class.active]="autoVoice()" (click)="toggleAutoVoice()">
+                <ion-icon name="volume-high"></ion-icon> Voz automática
+              </button>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="info"><p class="desc">Cargando Pokédex...</p></div>
+      }
+    </div>
+  </section>
+</ion-content>

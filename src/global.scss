@@ -1,37 +1,169 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
-
-/* Core CSS required for Ionic components to work properly */
+/* Ionic core CSS */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
-@import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
+@import "@ionic/angular/css/display.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
+/* Colores de pokedex */
+.type-badge {
+  color: #fff;
+  font-weight: 600;
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  display: inline-block;
+  margin: 2px;
+  text-transform: capitalize;
+  
+  &.flying   { background-color: #A890F0; }
+  &.steel    { background-color: #B8B8D0; color: #222; }
+  &.dark     { background-color: #705848; }
+  &.grass    { background-color: #78C850; }
+  &.fire     { background-color: #F08030; }
+  &.water    { background-color: #6890F0; }
+  &.bug      { background-color: #A8B820; }
+  &.normal   { background-color: #A8A878; }
+  &.poison   { background-color: #A040A0; }
+  &.electric { background-color: #F8D030; color: #222; }
+  &.ground   { background-color: #E0C068; color: #222; }
+  &.fairy    { background-color: #EE99AC; color: #222; }
+  &.fighting { background-color: #C03028; }
+  &.psychic  { background-color: #F85888; }
+  &.rock     { background-color: #B8A038; }
+  &.ghost    { background-color: #705898; }
+  &.ice      { background-color: #98D8D8; color: #222; }
+  &.dragon   { background-color: #7038F8; }
+}
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+/* ============ Estilo Pokédex ============ */
+
+/* Carcasa roja detrás de todo */
+ion-content.dex-body {
+  --background: linear-gradient(180deg, #c62828 0%, #8e0000 100%);
+  --padding-start: 10px;
+  --padding-end: 10px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+}
+
+/* Marco gris de la pantalla */
+.dex-screen {
+  position: relative;
+  padding: 12px 10px 10px;
+  border-radius: 16px 16px 16px 40px;
+  background: linear-gradient(180deg, #f4f6f8 0%, #cfd4da 100%);
+  border: 3px solid #1a1a1a;
+  box-shadow: 0 4px 0 #5e0000, inset 0 2px 0 #fff;
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #d32f2f;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.5);
+  }
+  &::before { left: calc(50% - 14px); }
+  &::after { left: calc(50% + 8px); }
+}
+
+/* Pantalla LCD verde con líneas de barrido */
+.lcd {
+  position: relative;
+  padding: 12px;
+  border-radius: 10px;
+  color: var(--dex-lcd-ink);
+  background-color: var(--dex-lcd);
+  background-image:
+    repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.045) 0 1px, transparent 1px 3px),
+    radial-gradient(ellipse at 25% 0%, rgba(255, 255, 255, 0.45), transparent 60%);
+  border: 3px solid #3c4a42;
+  box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.35);
+}
+
+/* Botones redondos de la carcasa */
+.dex-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 42px;
+  height: 42px;
+  padding: 0 12px;
+  border: 2px solid #1a1a1a;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #4a90e2, #1565c0);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.85rem;
+  box-shadow: 0 3px 0 #0d3b82;
+
+  &:active { transform: translateY(2px); box-shadow: 0 1px 0 #0d3b82; }
+  &.active { background: linear-gradient(180deg, #ffe082, #f9a825); color: #1a1a1a; box-shadow: 0 3px 0 #b77a00; }
+  &.wide { padding: 0 18px; }
+  ion-icon { font-size: 1.2rem; }
+}
+
+/* Barra de pestañas */
+ion-tab-bar.dex-tabbar {
+  --background: #1a1a1a;
+  --border: 0;
+  border-top: 4px solid #8e0000;
+  padding-bottom: var(--ion-safe-area-bottom, 0);
+
+  ion-tab-button {
+    --color: #9aa0a6;
+    --color-selected: #ffd54f;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    ion-icon { font-size: 1.5rem; }
+  }
+  ion-tab-button.tab-selected ion-icon { filter: drop-shadow(0 0 6px rgba(255, 213, 79, 0.9)); }
+}
+
+/* Páginas de detalle y formulario con fondo LCD */
+ion-content.lcd-page {
+  --background: var(--dex-lcd);
+  --color: var(--dex-lcd-ink);
+
+  ion-card {
+    background: rgba(255, 255, 255, 0.6);
+    color: var(--dex-lcd-ink);
+    border: 2px solid rgba(16, 48, 31, 0.3);
+    border-radius: 14px;
+    box-shadow: none;
+  }
+  ion-card-subtitle, ion-card-title { color: var(--dex-lcd-ink); }
+  ion-list { background: transparent; }
+  ion-item { --background: rgba(255, 255, 255, 0.6); --color: var(--dex-lcd-ink); border-radius: 10px; margin-bottom: 6px; }
+}
+
+/* Escena A-Frame creada por código (no recibe estilos encapsulados del componente) */
+.cam-body { --padding-bottom: 12px; }
+.cam-screen { height: 100%; box-sizing: border-box; display: flex; flex-direction: column; }
+.cam-screen > .lcd { flex: 1; min-height: 0; }
+
+.ar-stage {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  a-scene {
+    position: absolute !important;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    background: transparent !important;
+  }
+  .a-canvas { background: transparent !important; }
+  .a-enter-vr, .a-orientation-modal { display: none !important; }
+}

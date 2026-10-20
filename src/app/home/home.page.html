@@ -1,20 +1,105 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
+<ion-header class="ion-no-border">
+  <app-dex-top title="Pokédex" subtitle="Inicio"></app-dex-top>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content class="dex-body">
+  <section class="dex-screen">
+    <div class="lcd">
+      <div class="controls">
+        <label class="search-box">
+          <ion-icon name="search"></ion-icon>
+          <input
+            type="search"
+            [value]="searchText()"
+            (input)="filterPokemons($event)"
+            placeholder="Nombre o número"
+            aria-label="Buscar Pokémon" />
+        </label>
+        <button type="button" class="dex-btn" aria-label="Ordenar" (click)="openSortMenu()">
+          <ion-icon name="swap-vertical-outline"></ion-icon>
+        </button>
+        <button type="button" class="dex-btn" [class.active]="showAdvanced()" aria-label="Filtros" (click)="toggleAdvanced()">
+          <ion-icon name="options-outline"></ion-icon>
+        </button>
+      </div>
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+      @if (showAdvanced()) {
+        <div class="advanced-panel">
+          <p class="panel-label">Tipos</p>
+          <div class="chip-group">
+            @for (t of typeOptions; track t) {
+              <button
+                type="button"
+                class="type-badge filter-chip"
+                [class]="t"
+                [class.selected]="selectedTypes().includes(t)"
+                [attr.aria-pressed]="selectedTypes().includes(t)"
+                (click)="toggleType(t)">
+                {{ t | typeEs }}
+              </button>
+            }
+          </div>
+
+          <ion-item>
+            <ion-select
+              label="Debilidades" labelPlacement="stacked" [multiple]="true"
+              [value]="selectedWeaknesses()" (ionChange)="setWeaknesses($event)">
+              @for (t of typeOptions; track t) {
+                <ion-select-option [value]="t">{{ t | typeEs }}</ion-select-option>
+              }
+            </ion-select>
+          </ion-item>
+
+          <div class="range-row">
+            <ion-item>
+              <ion-input
+                label="Desde el #" labelPlacement="stacked" type="number" inputmode="numeric"
+                [value]="rangeFrom()" (ionInput)="setRange('from', $event)">
+              </ion-input>
+            </ion-item>
+            <ion-item>
+              <ion-input
+                label="Hasta el #" labelPlacement="stacked" type="number" inputmode="numeric"
+                [value]="rangeTo()" (ionInput)="setRange('to', $event)">
+              </ion-input>
+            </ion-item>
+          </div>
+
+          <ion-button fill="outline" color="danger" size="small" (click)="resetFilters()">Restablecer</ion-button>
+        </div>
+      }
+
+      @if (loading()) {
+        <div class="state">
+          <ion-spinner name="crescent" color="danger"></ion-spinner>
+          <p>Cargando Pokémon...</p>
+        </div>
+      } @else if (loadFailed()) {
+        <div class="state">
+          <p>No se pudieron cargar los Pokémon. Revisa tu conexión.</p>
+          <ion-button color="danger" (click)="retry()">Reintentar</ion-button>
+        </div>
+      } @else {
+        <p class="count">{{ filteredPokemons().length }} Pokémon registrados</p>
+      }
+
+      <div class="dex-grid">
+        @for (p of filteredPokemons(); track p.id) {
+          <app-pokemon-card [pokemon]="p" (open)="goToDetail($event)" (ar)="openInCamera($event)"></app-pokemon-card>
+        }
+      </div>
+
+      @if (!loading() && !loadFailed() && filteredPokemons().length === 0) {
+        <div class="state">
+          <p>No hay Pokémon que coincidan con tu búsqueda.</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <ion-fab slot="fixed" vertical="bottom" horizontal="end">
+    <ion-fab-button color="danger" (click)="addPokemon()">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
 </ion-content>
